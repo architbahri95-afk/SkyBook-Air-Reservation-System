@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SkyBook – Book flights</title>
+<style>
+:root{--bg:#f3f6fb;--card:#fff;--ink:#0f2742;--mut:#64748b;--pri:#0b6bdc;--pri2:#07337a;--acc:#ff8a1f;--ok:#0e9f6e;--bad:#dc2f2f;--line:#e2e8f0;--gold:#f5c04a;--sh:0 10px 30px rgba(15,39,66,.10)}
+@media(prefers-color-scheme:dark){:root{--bg:#0b1220;--card:#131d30;--ink:#e8eef8;--mut:#94a3b8;--line:#243049;--sh:0 10px 30px rgba(0,0,0,.4)}}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+button{font-family:inherit;cursor:pointer}.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+nav{position:sticky;top:0;z-index:20;background:rgba(7,51,122,.95);backdrop-filter:blur(8px);color:#fff}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+.brand{font-weight:800;font-size:21px;letter-spacing:.3px}.brand b{color:var(--acc)}
+nav a{color:#cfe0ff;margin-left:22px;text-decoration:none;font-size:14px;cursor:pointer;padding:6px 0;border-bottom:2px solid transparent}
+nav a.on,nav a:hover{color:#fff;border-color:var(--acc)}
+.mode{font-size:11px;padding:3px 9px;border-radius:20px;margin-left:18px;background:#ffffff22}.mode.live{background:var(--ok)}
+.hero{background:radial-gradient(900px 300px at 85% -10%,#3b8cff55,transparent),linear-gradient(135deg,#07337a,#0b6bdc 60%,#3aa0ff);color:#fff;padding:44px 0 110px}
+.hero h1{font-size:38px;margin:0 0 6px}.hero p{margin:0;color:#d6e6ff}
+.card{background:var(--card);border-radius:16px;box-shadow:var(--sh);padding:20px}
+.sbox{margin-top:-78px;position:relative}
+.seg{display:inline-flex;background:var(--bg);border-radius:30px;padding:3px;margin-bottom:14px}
+.seg button{border:0;background:none;padding:7px 18px;border-radius:30px;color:var(--mut);font-weight:600;font-size:13px}.seg button.on{background:var(--pri);color:#fff}
+.srow{display:grid;grid-template-columns:1fr 40px 1fr 1fr 1fr 1fr;gap:10px;align-items:end}
+label{font-size:11px;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:5px}
+input,select{width:100%;padding:12px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font-size:15px;font-family:inherit}
+input:focus,select:focus{outline:none;border-color:var(--pri)}input:disabled{opacity:.45}
+.swap{height:44px;border:1.5px solid var(--line);background:var(--card);border-radius:50%;color:var(--pri);font-size:18px}
+.btn{background:linear-gradient(135deg,var(--acc),#ff6a00);color:#fff;border:0;border-radius:10px;padding:13px 26px;font-size:15px;font-weight:700}
+.btn:hover{filter:brightness(1.07)}.btn:disabled{opacity:.5}.btn.sec{background:var(--bg);color:var(--ink);border:1.5px solid var(--line)}.btn.red{background:var(--bad)}
+.feat{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:28px 0}
+.feat div{background:var(--card);border-radius:14px;padding:16px;box-shadow:var(--sh);font-size:13px;color:var(--mut)}.feat b{display:block;color:var(--ink);font-size:15px;margin:4px 0}
+.steps{display:flex;gap:6px;margin:22px 0}.steps div{flex:1;text-align:center;font-size:12px;font-weight:600;color:var(--mut);padding-top:10px;border-top:4px solid var(--line)}
+.steps .on{color:var(--pri);border-color:var(--pri)}.steps .done{border-color:var(--ok);color:var(--ok)}
+.days{display:flex;gap:8px;overflow-x:auto;margin:18px 0 8px;padding-bottom:4px}
+.day{min-width:78px;text-align:center;padding:9px 6px;border-radius:12px;background:var(--card);border:1.5px solid var(--line);font-size:12px;color:var(--mut)}.day b{display:block;font-size:16px;color:var(--ink)}.day.on{border-color:var(--pri);background:var(--pri);color:#cfe3ff}.day.on b{color:#fff}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.chip{border:1.5px solid var(--line);background:var(--card);color:var(--ink);padding:6px 14px;border-radius:20px;font-size:13px}.chip.on{background:var(--pri);border-color:var(--pri);color:#fff}
+.fl{display:grid;grid-template-columns:110px 1fr 140px;gap:16px;align-items:center;margin-top:12px;transition:.15s}.fl:hover{transform:translateY(-2px)}
+.air{font-weight:700}.air small{display:block;color:var(--mut);font-weight:500;font-size:12px}
+.tm{font-size:24px;font-weight:800}.mut{color:var(--mut);font-size:13px}
+.rt{display:flex;align-items:center;gap:12px}.ln{flex:1;text-align:center;font-size:12px;color:var(--mut);position:relative}.ln:before{content:"";position:absolute;left:0;right:0;top:50%;border-top:2px dashed var(--line);z-index:0}.ln span{position:relative;background:var(--card);padding:0 8px}
+.pr{text-align:right}.pr .p{font-size:24px;font-weight:800}.low{color:var(--bad);font-size:12px;font-weight:600}
+.lay{display:grid;grid-template-columns:1fr 310px;gap:18px;align-items:start}.aside{position:sticky;top:76px}
+.row{display:flex;justify-content:space-between;margin:7px 0;font-size:14px}.row.t{font-size:18px;font-weight:800;border-top:1.5px solid var(--line);padding-top:10px;margin-top:12px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.pcard{margin-bottom:14px}.pcard h4{margin:0 0 10px}
+.seatmap{max-width:300px;margin:0 auto;background:var(--bg);border-radius:60px 60px 14px 14px;padding:36px 20px 16px}
+.sr{display:grid;grid-template-columns:repeat(3,1fr) 24px repeat(3,1fr);gap:6px;margin-bottom:6px;align-items:center;text-align:center;font-size:11px;color:var(--mut)}
+.st{height:34px;border-radius:8px 8px 4px 4px;border:1.5px solid var(--pri);background:var(--card);color:var(--ink);font-size:11px;font-weight:700;padding:0}
+.st.b{border-color:var(--gold)}.st.x{background:var(--line);border-color:var(--line);color:var(--mut);cursor:not-allowed}.st.d{opacity:.3;cursor:not-allowed}.st.me{background:var(--pri);color:#fff}.st.me.b{background:var(--gold);color:#222}
+.legend{display:flex;gap:14px;justify-content:center;font-size:12px;color:var(--mut);margin:12px 0}.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:4px;vertical-align:-2px;border:1.5px solid var(--pri)}
+.bp{display:grid;grid-template-columns:1fr 150px;border-radius:16px;overflow:hidden;background:var(--card);box-shadow:var(--sh);margin-bottom:16px}
+.bp .l{padding:18px 20px;border-left:8px solid var(--pri)}.bp .r{padding:16px;background:var(--pri2);color:#fff;border-left:2px dashed #ffffff66;text-align:center}
+.bp .big{font-size:28px;font-weight:800;letter-spacing:2px}.bp .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}.bp .grid div{font-size:11px;color:var(--mut)}.bp .grid b{display:block;font-size:14px;color:var(--ink)}
+.status{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;color:#fff;background:var(--ok)}.status.x{background:var(--bad)}
+.kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0}.kpi b{font-size:26px;display:block}
+.hb{display:flex;align-items:center;gap:10px;margin:8px 0;font-size:13px}.hb i{display:block;height:18px;background:linear-gradient(90deg,var(--pri),#3aa0ff);border-radius:4px}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);padding:12px 22px;border-radius:12px;color:#fff;display:none;z-index:99;box-shadow:var(--sh)}
+.ov{position:fixed;inset:0;background:rgba(7,20,40,.65);display:none;align-items:center;justify-content:center;color:#fff;z-index:98;font-weight:600}
+.empty{text-align:center;color:var(--mut);padding:44px 10px}
+.pay{display:flex;gap:8px;margin-bottom:12px}
+@media(max-width:820px){.srow{grid-template-columns:1fr 1fr}.swap{display:none}.lay{grid-template-columns:1fr}.aside{position:static}.fl{grid-template-columns:1fr}.pr{text-align:left}.feat,.kpi{grid-template-columns:1fr 1fr}.bp{grid-template-columns:1fr}.hero h1{font-size:28px}}
+.authbox{display:grid;grid-template-columns:1fr 1.1fr;margin:40px auto;max-width:880px;border-radius:20px;overflow:hidden;box-shadow:var(--sh);background:var(--card)}
+.authbox .l{background:radial-gradient(400px 200px at 100% 0,#3b8cff66,transparent),linear-gradient(135deg,#07337a,#0b6bdc);color:#fff;padding:44px 34px}
+.authbox .l h2{font-size:28px;margin:0 0 10px}.authbox .l li{margin:12px 0;color:#d6e6ff;list-style:none}.authbox .l li:before{content:"✓ ";color:var(--acc);font-weight:800}.authbox .l ul{padding:0;margin-top:26px}
+.authbox .f{padding:34px 32px;display:grid;gap:14px;align-content:start}
+.err{color:var(--bad);font-size:13px;min-height:18px;font-weight:600}
+.pw{position:relative}.eye{position:absolute;right:6px;top:6px;border:0;background:none;font-size:17px;padding:6px}
+.meter{height:5px;border-radius:3px;background:var(--line);margin-top:7px;overflow:hidden}.meter i{display:block;height:100%;width:0;transition:.2s}
+.usr{display:inline-flex;align-items:center;gap:8px;margin-left:20px;font-size:14px}.av{width:28px;height:28px;border-radius:50%;background:var(--acc);display:inline-flex;align-items:center;justify-content:center;font-weight:800}
+@media(max-width:820px){.authbox{grid-template-columns:1fr}.authbox .l{padding:26px}}
+@media print{nav,.hero,.steps,.noprint{display:none!important}}
+</style></head><body>
+<nav><div class="wrap"><div class="brand" style="cursor:pointer" onclick="view('book')">✈ Sky<b>Book</b></div><div id="navr" style="display:flex;align-items:center"></div></div></nav>
+
+<div id="v-book">
+ <div class="hero"><div class="wrap"><h1>Find your next flight</h1><p>Compare fares, pick your seat, fly. Powered by Oracle PL/SQL.</p></div></div>
+ <div class="wrap">
+  <div class="card sbox">
+   <div class="seg"><button id="ow" class="on" onclick="setTrip('ow')">One way</button><button id="rt" onclick="setTrip('rt')">Round trip</button></div>
+   <div class="srow">
+    <div><label>From</label><select id="from"></select></div>
+    <button class="swap" onclick="swapAp()" title="Swap">⇄</button>
+    <div><label>To</label><select id="to"></select></div>
+    <div><label>Depart</label><input type="date" id="date"></div>
+    <div><label>Return</label><input type="date" id="ret" disabled></div>
+    <div><label>Travellers · Class</label><div style="display:flex;gap:6px"><select id="pax" style="width:64px"></select><select id="cls"><option value="ECONOMY">Economy</option><option value="BUSINESS">Business</option></select></div></div>
+   </div>
+   <div style="text-align:right;margin-top:16px"><button class="btn" onclick="search()">Search flights →</button></div>
+  </div>
+  <div id="home" class="feat"><div>🔒<b>Secure booking</b>Row-level locking prevents double booking.</div><div>💺<b>Choose your seat</b>Interactive seat map, Business &amp; Economy.</div><div>🧳<b>Add-ons</b>Extra baggage and meals.</div><div>↩️<b>Easy refunds</b>Up to 90% back on cancellation.</div></div>
+  <div id="flow" style="display:none">
+   <div class="steps" id="steps"></div>
+   <div id="stage"></div>
+  </div>
+ </div>
+</div>
+
+<div id="v-manage" class="wrap" style="display:none;padding-top:30px">
+ <div class="card"><h2 style="margin-top:0">Manage your booking</h2>
+  <div style="display:flex;gap:10px;align-items:end"><div style="flex:1"><label>PNR / Booking reference</label><input id="pnr" maxlength="6" style="text-transform:uppercase;letter-spacing:4px;font-weight:700"></div><button class="btn" onclick="lookup()">Retrieve</button></div>
+  <div id="mine" style="margin-top:12px"></div></div>
+ <div id="ticket"></div>
+</div>
+<div id="v-admin" class="wrap" style="display:none;padding-top:30px"><div id="adm"></div></div>
+<div id="v-trips" class="wrap" style="display:none;padding-top:30px"><div id="trips"></div></div>
+<div id="v-auth" class="wrap" style="display:none"><div class="authbox">
+ <div class="l"><h2>Welcome aboard ✈</h2><p>Sign in to book flights and keep all your trips in one place.</p>
+  <ul><li>Faster checkout with saved details</li><li>View and manage every booking</li><li>Instant cancellations &amp; refunds</li></ul></div>
+ <div class="f">
+  <div class="seg" style="justify-self:start"><button id="a-in" class="on" onclick="authMode('in')">Sign in</button><button id="a-up" onclick="authMode('up')">Create account</button></div>
+  <div id="a-name-w" style="display:none"><label>Full name</label><input id="a-name" autocomplete="name"></div>
+  <div><label>E-mail</label><input id="a-email" type="email" autocomplete="email" placeholder="you@example.com"></div>
+  <div><label>Password</label><div class="pw"><input id="a-pass" type="password" autocomplete="current-password" oninput="meter()"><button class="eye" type="button" onclick="const i=$('#a-pass');i.type=i.type==='password'?'text':'password'">👁</button></div><div class="meter" id="a-meter" style="display:none"><i></i></div></div>
+  <div id="a-conf-w" style="display:none"><label>Confirm password</label><input id="a-conf" type="password" autocomplete="new-password"></div>
+  <div class="err" id="a-err"></div>
+  <button class="btn" id="a-go" onclick="authSubmit()">Sign in</button>
+  <div class="mut" id="a-hint"></div>
+ </div></div></div>
+<div class="toast" id="toast"></div><div class="ov" id="ov">Processing payment securely…</div>
+
+<script>
+const $=s=>document.querySelector(s),L='ABCDEF',pad=n=>String(n).padStart(2,'0');
+const AIRPORTS=[['DEL','Delhi','Indira Gandhi Intl'],['BOM','Mumbai','Chhatrapati Shivaji Maharaj Intl'],['BLR','Bengaluru','Kempegowda Intl'],['MAA','Chennai','Chennai Intl'],['CCU','Kolkata','Netaji Subhas Chandra Bose Intl'],['HYD','Hyderabad','Rajiv Gandhi Intl'],['GOI','Goa','Manohar Intl'],['AMD','Ahmedabad','Sardar Vallabhbhai Patel Intl'],['PNQ','Pune','Pune Airport'],['COK','Kochi','Cochin Intl'],['JAI','Jaipur','Jaipur Intl'],['LKO','Lucknow','Chaudhary Charan Singh Intl']].map(([code,city,name])=>({code,city,name}));
+let APS=AIRPORTS,live=false;
+const S={trip:'ow',leg:0,sel:[],flights:[],sort:'price',tod:'all',pax:[],seats:[],active:0,bag:15,meal:'NONE',contact:{},mine:[]};
+const H=s=>{let h=7;for(const c of s)h=(h*31+c.charCodeAt(0))>>>0;return h};
+const ymd=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`,loc=d=>ymd(d)+'T'+pad(d.getHours())+':'+pad(d.getMinutes());
+const city=c=>(APS.find(a=>a.code===c)||{}).city||c,inr=n=>'₹'+Math.round(n).toLocaleString('en-IN');
+const hm=s=>s.slice(11,16),dmy=s=>new Date(s).toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
+const mins=(a,b)=>Math.round((new Date(b)-new Date(a))/60000),dur=(a,b)=>{const m=mins(a,b);return Math.floor(m/60)+'h '+pad(m%60)+'m'};
+function toast(m,ok=true){const t=$('#toast');t.textContent=m;t.style.background=ok?'#0e9f6e':'#dc2f2f';t.style.display='block';clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',3800)}
+
+/* ===== Data layer: live (Oracle via Node) or demo (in-browser) ===== */
+const booked={},DB={};
+function takenDemo(id){const h=H(id),s=new Set(booked[id]||[]);for(let i=0;i<h%38;i++){const k=(h*(i+3)+i*17)%60;s.add((Math.floor(k/6)+1)+L[k%6])}return[...s]}
+function demoFlights(f,t,date){const h0=H(f+t),dur=75+h0%150,base=2800+(h0%50)*90,out=[];
+ [6,10,15,20].forEach((hr,i)=>{const dep=new Date(date+'T'+pad(hr)+':'+pad(((h0>>i)%4)*15)+':00');if(dep<=new Date())return;
+  const arr=new Date(+dep+(dur+i*10)*60000),id=f+t+date+hr;
+  out.push({flight_id:id,flight_no:'SB'+(100+h0%800+i),origin:f,destination:t,origin_city:city(f),dest_city:city(t),dep_time:loc(dep),arr_time:loc(arr),price:base+i*300,available_seats:60-takenDemo(id).length})});return out}
+const fare=(price,cls,bag,meal)=>Math.round((price*(cls==='BUSINESS'?2.2:1)+(bag-15)*40+({VEG:350,NONVEG:400}[meal]||0))*1.12*100)/100;
+const refundOf=(fr,dep)=>{const h=(new Date(dep)-new Date())/36e5;return Math.round(fr*(h>24?.9:h>2?.5:0))};
+async function jf(u,o={}){const r=await fetch(u,{...o,headers:{...o.headers,...(S.token&&S.token!=='demo'?{Authorization:'Bearer '+S.token}:{})}});const d=await r.json();if(r.status===401&&S.token)logout(true);if(!r.ok)throw Error(d.error||'Request failed');return d}
+const API={
+ async flights(f,t,d){return live?jf(`/api/flights?from=${f}&to=${t}&date=${d}`):demoFlights(f,t,d)},
+ async seats(id){return live?jf('/api/seats/'+id):takenDemo(id)},
+ async book(b){
+  if(live)return jf('/api/book2',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({flightId:b.fl.flight_id,name:b.name,email:b.email,phone:b.phone,cls:b.cls,seat:b.seat,bag:b.bag,meal:b.meal})});
+  if(!S.user)throw Error('Please log in to continue');const id=b.fl.flight_id,tk=takenDemo(id);let seat=b.seat;
+  if(!seat){for(let n=b.cls==='BUSINESS'?0:12;n<60;n++){const s=(Math.floor(n/6)+1)+L[n%6];if(!tk.includes(s)){seat=s;break}}}
+  if(!seat||tk.includes(seat))throw Error('Seat '+seat+' was just taken');
+  (booked[id]=booked[id]||[]).push(seat);const pnr=Math.random().toString(36).slice(2,8).toUpperCase(),f=fare(b.fl.price,b.cls,b.bag,b.meal);
+  DB[pnr]={pnr,seat_no:seat,fare:f,status:'CONFIRMED',refund:0,full_name:b.name,email:b.email,flight_no:b.fl.flight_no,flight_id:id,origin:b.fl.origin,destination:b.fl.destination,dep_time:b.fl.dep_time,arr_time:b.fl.arr_time,travel_class:b.cls,owner:S.user.email};
+  return{pnr,seat,fare:f}},
+ async booking(p){if(live)return jf('/api/booking/'+p);const b=DB[p.toUpperCase()];if(!b)throw Error('PNR not found');return b},
+ async cancel(p){if(live)return jf('/api/cancel/'+p,{method:'POST'});const b=DB[p];if(!b||b.status==='CANCELLED')throw Error('Ticket already cancelled');
+  b.status='CANCELLED';b.refund=refundOf(b.fare,b.dep_time);booked[b.flight_id]=(booked[b.flight_id]||[]).filter(s=>s!==b.seat_no);return{refund:b.refund}},
+ async stats(){if(live)return jf('/api/stats');const m={};Object.values(DB).filter(b=>b.status==='CONFIRMED').forEach(b=>{const k=b.flight_no;m[k]=m[k]||{flight_no:k,origin:b.origin,destination:b.destination,tickets_sold:0,revenue:0};m[k].tickets_sold++;m[k].revenue+=b.fare});return Object.values(m).sort((a,b)=>b.revenue-a.revenue)}
+};
+
+/* ===== Search ===== */
+function fillAp(){const o=APS.map(a=>`<option value="${a.code}">${a.city} (${a.code}) – ${a.name}</option>`).join('');$('#from').innerHTML=o;$('#to').innerHTML=o;$('#to').selectedIndex=1;
+ $('#pax').innerHTML=[1,2,3,4,5,6].map(n=>`<option>${n}</option>`).join('')}
+function swapAp(){const a=$('#from').value;$('#from').value=$('#to').value;$('#to').value=a}
+function setTrip(t){S.trip=t;$('#ow').classList.toggle('on',t==='ow');$('#rt').classList.toggle('on',t==='rt');$('#ret').disabled=t==='ow'}
+
+function stepBar(n){$('#steps').innerHTML=['Flights','Passengers','Seats','Extras & Payment','Confirmation'].map((s,i)=>`<div class="${i+1<n?'done':i+1===n?'on':''}">${i+1}. ${s}</div>`).join('')}
+async function search(){
+ const q=S.q={f:$('#from').value,t:$('#to').value,d:$('#date').value,r:$('#ret').value,n:+$('#pax').value,cls:$('#cls').value};
+ if(q.f===q.t)return toast('Origin and destination must differ',false);
+ if(!q.d)return toast('Select a departure date',false);
+ if(S.trip==='rt'&&(!q.r||q.r<q.d))return toast('Select a valid return date',false);
+ S.leg=0;S.sel=[];S.seats=[];$('#home').style.display='none';$('#flow').style.display='block';await loadLeg()}
+async function loadLeg(date){
+ const q=S.q,rt=S.leg===1,f=rt?q.t:q.f,t=rt?q.f:q.t;date=date||(rt?q.r:q.d);if(rt)q.r=date;else q.d=date;
+ stepBar(1);$('#stage').innerHTML='<div class="empty">Searching flights…</div>';
+ try{S.flights=await API.flights(f,t,date)}catch(e){S.flights=[];toast(e.message,false)}renderResults(f,t,date)}
+function renderResults(f,t,date){
+ const rt=S.leg===1,base=new Date(date+'T00:00:00'),today=ymd(new Date());let days='';
+ for(let i=-3;i<=3;i++){const d=new Date(+base+i*864e5),s=ymd(d);if(s<today)continue;days+=`<div class="day ${i===0?'on':''}" onclick="loadLeg('${s}')" style="cursor:pointer">${d.toLocaleDateString('en-GB',{weekday:'short'})}<b>${d.getDate()}</b>${d.toLocaleDateString('en-GB',{month:'short'})}</div>`}
+ let fl=S.flights.filter(x=>S.tod==='all'||(S.tod==='m'&&+hm(x.dep_time).slice(0,2)<12)||(S.tod==='a'&&+hm(x.dep_time).slice(0,2)>=12&&+hm(x.dep_time).slice(0,2)<18)||(S.tod==='e'&&+hm(x.dep_time).slice(0,2)>=18));
+ fl.sort((a,b)=>S.sort==='price'?a.price-b.price:S.sort==='fast'?mins(a.dep_time,a.arr_time)-mins(b.dep_time,b.arr_time):a.dep_time.localeCompare(b.dep_time));
+ const ch=(k,v,l)=>`<button class="chip ${S[k]===v?'on':''}" onclick="S.${k}='${v}';renderResults('${f}','${t}','${date}')">${l}</button>`;
+ $('#stage').innerHTML=`<h2 style="margin:6px 0">${rt?'Choose your return flight':'Choose your departure flight'}: ${city(f)} → ${city(t)}</h2>
+ <div class="days">${days}</div>
+ <div class="bar"><span class="mut">Sort</span>${ch('sort','price','Cheapest')}${ch('sort','fast','Fastest')}${ch('sort','early','Earliest')}<span class="mut" style="margin-left:14px">Depart</span>${ch('tod','all','Any')}${ch('tod','m','Morning')}${ch('tod','a','Afternoon')}${ch('tod','e','Evening')}</div>
+ ${fl.length?fl.map((x,i)=>`<div class="card fl"><div class="air">SkyBook Air<small>${x.flight_no}</small></div>
+  <div class="rt"><div><div class="tm">${hm(x.dep_time)}</div><div class="mut">${x.origin}</div></div><div class="ln"><span>${dur(x.dep_time,x.arr_time)} · Non-stop</span></div><div><div class="tm">${hm(x.arr_time)}</div><div class="mut">${x.destination}</div></div></div>
+  <div class="pr"><div class="p">${inr(fare(x.price,S.q.cls,15,'NONE'))}</div>${x.available_seats<=10?`<div class="low">${x.available_seats?'Only '+x.available_seats+' seats left':'Sold out'}</div>`:'<div class="mut">per traveller</div>'}<button class="btn" style="margin-top:6px;padding:8px 20px" ${x.available_seats<S.q.n?'disabled':''} onclick="pick(${S.flights.indexOf(x)})">Select</button></div></div>`).join(''):'<div class="empty">No flights available for this day. Try another date above.</div>'}`}
+function pick(i){S.sel[S.leg]=S.flights[i];if(S.trip==='rt'&&S.leg===0){S.leg=1;loadLeg()}else gate(passengers)}
+
+/* ===== Passengers ===== */
+function summary(){const q=S.q,tot=S.sel.reduce((s,f)=>s+fare(f.price,q.cls,S.bag,S.meal)*q.n,0);
+ const base=S.sel.reduce((s,f)=>s+f.price*(q.cls==='BUSINESS'?2.2:1)*q.n,0),ex=S.sel.reduce((s,f)=>s+((S.bag-15)*40+({VEG:350,NONVEG:400}[S.meal]||0))*q.n,0);
+ return `<div class="card aside"><h4 style="margin-top:0">Your trip</h4>${S.sel.map(f=>`<div style="margin-bottom:10px"><b>${f.origin} → ${f.destination}</b><div class="mut">${dmy(f.dep_time)} · ${hm(f.dep_time)}–${hm(f.arr_time)} · ${f.flight_no}</div></div>`).join('')}
+ <div class="row"><span>Fare × ${q.n} (${q.cls.toLowerCase()})</span><span>${inr(base)}</span></div>${ex?`<div class="row"><span>Baggage / meals</span><span>${inr(ex)}</span></div>`:''}<div class="row"><span>Taxes &amp; fees (12%)</span><span>${inr((base+ex)*.12)}</span></div><div class="row t"><span>Total</span><span>${inr(tot)}</span></div></div>`}
+function passengers(){stepBar(2);const n=S.q.n;
+ $('#stage').innerHTML=`<div class="lay"><div><h2 style="margin-top:0">Traveller details</h2>
+ ${Array.from({length:n},(_,i)=>`<div class="card pcard"><h4>Passenger ${i+1}</h4><div class="g2"><div><label>Full name (as on ID)</label><input id="pn${i}" value="${S.pax[i]?.name||(i===0&&S.user?S.user.name:'')}"></div><div><label>Gender</label><select id="pg${i}"><option>Male</option><option>Female</option><option>Other</option></select></div></div></div>`).join('')}
+ <div class="card pcard"><h4>Contact details</h4><div class="g2"><div><label>E-mail</label><input id="ce" type="email" value="${S.contact.email||(S.user?S.user.email:'')}"></div><div><label>Mobile</label><input id="cp" value="${S.contact.phone||''}"></div></div></div>
+ <button class="btn" onclick="toSeats()">Continue to seats →</button></div>${summary()}</div>`}
+function toSeats(){const n=S.q.n;S.pax=[];
+ for(let i=0;i<n;i++){const v=$('#pn'+i).value.trim();if(v.length<2)return toast('Enter name for passenger '+(i+1),false);S.pax.push({name:v})}
+ const e=$('#ce').value.trim(),p=$('#cp').value.trim();if(!/^\S+@\S+\.\S+$/.test(e))return toast('Enter a valid e-mail',false);if(p.replace(/\D/g,'').length<8)return toast('Enter a valid mobile number',false);
+ S.contact={email:e,phone:p};S.seats=Array(n).fill(null);S.active=0;seatStep()}
+
+/* ===== Seat map ===== */
+async function seatStep(){stepBar(3);let tk=[];try{tk=await API.seats(S.sel[0].flight_id)}catch(e){toast(e.message,false)}S.taken=tk;drawSeats()}
+function drawSeats(){const bz=S.q.cls==='BUSINESS';let rows='';
+ for(let r=1;r<=10;r++){rows+=`<div class="sr">${[0,1,2].map(c=>seat(r,c)).join('')}<span>${r}</span>${[3,4,5].map(c=>seat(r,c)).join('')}</div>`}
+ $('#stage').innerHTML=`<div class="lay"><div><h2 style="margin-top:0">Choose your seats · ${S.sel[0].origin} → ${S.sel[0].destination}</h2>
+ <div class="bar">${S.pax.map((p,i)=>`<button class="chip ${S.active===i?'on':''}" onclick="S.active=${i};drawSeats()">${p.name.split(' ')[0]}: ${S.seats[i]||'—'}</button>`).join('')}</div>
+ <div class="seatmap"><div class="sr" style="margin-bottom:10px"><span>A</span><span>B</span><span>C</span><span></span><span>D</span><span>E</span><span>F</span></div>${rows}</div>
+ <div class="legend"><span><i></i>Available</span><span><i style="background:var(--gold);border-color:var(--gold)"></i>Business</span><span><i style="background:var(--pri)"></i>Yours</span><span><i style="background:var(--line);border-color:var(--line)"></i>Taken</span></div>
+ <button class="btn sec" onclick="S.seats=S.seats.map(()=>null);extras()">Skip – auto assign</button> <button class="btn" onclick="extras()">Continue →</button></div>${summary()}</div>`}
+function seat(r,c){const id=r+L[c],b=r<=2,ok=bz=>b===bz,x=S.taken.includes(id),me=S.seats.includes(id),dis=!ok(S.q.cls==='BUSINESS');
+ return `<button class="st ${b?'b':''} ${x?'x':''} ${me?'me':''} ${dis&&!x&&!me?'d':''}" ${x||dis?'disabled':''} onclick="pickSeat('${id}')">${id}</button>`}
+function pickSeat(id){const i=S.seats.indexOf(id);if(i>=0)S.seats[i]=null;else{S.seats[S.active]=id;const nx=S.seats.findIndex(s=>!s);if(nx>=0)S.active=nx}drawSeats()}
+
+/* ===== Extras + payment ===== */
+function extras(){stepBar(4);$('#stage').innerHTML=`<div class="lay"><div><h2 style="margin-top:0">Extras &amp; payment</h2>
+ <div class="card pcard"><h4>Add-ons (every traveller, every flight)</h4><div class="g2"><div><label>Check-in baggage</label><select id="bag" onchange="S.bag=+this.value;$('.aside').outerHTML=summary()"><option value="15">15 kg – included</option><option value="25" ${S.bag==25?'selected':''}>25 kg (+₹400)</option><option value="30" ${S.bag==30?'selected':''}>30 kg (+₹600)</option></select></div>
+ <div><label>Meal</label><select id="meal" onchange="S.meal=this.value;$('.aside').outerHTML=summary()"><option value="NONE">No meal</option><option value="VEG" ${S.meal=='VEG'?'selected':''}>Veg (+₹350)</option><option value="NONVEG" ${S.meal=='NONVEG'?'selected':''}>Non-veg (+₹400)</option></select></div></div></div>
+ <div class="card pcard"><h4>Payment</h4><div class="pay"><button class="chip on">Card</button><button class="chip" onclick="toast('UPI is available in the full version')">UPI</button></div>
+ <div class="g2"><div style="grid-column:1/3"><label>Card number</label><input id="cn" placeholder="4111 1111 1111 1111" maxlength="19" oninput="this.value=this.value.replace(/\\D/g,'').replace(/(.{4})/g,'$1 ').trim()"></div><div><label>Name on card</label><input id="cm"></div><div class="g2"><div><label>Expiry</label><input id="ce2" placeholder="MM/YY" maxlength="5"></div><div><label>CVV</label><input id="cv" type="password" maxlength="3"></div></div></div>
+ <div class="mut" style="margin-top:8px">🔒 Demo payment – no real charge is made.</div></div>
+ <button class="btn" onclick="pay()">Pay &amp; confirm</button></div>${summary()}</div>`}
+async function pay(){
+ if($('#cn').value.replace(/\D/g,'').length<15||!$('#cm').value.trim()||!/^\d\d\/\d\d$/.test($('#ce2').value)||$('#cv').value.length<3)return toast('Check your card details',false);
+ $('#ov').style.display='flex';const out=[];
+ try{for(let l=0;l<S.sel.length;l++)for(let i=0;i<S.q.n;i++){
+   const r=await API.book({fl:S.sel[l],name:S.pax[i].name,email:i?S.contact.email.replace('@',`+p${i}@`):S.contact.email,phone:S.contact.phone,cls:S.q.cls,seat:l===0?S.seats[i]:null,bag:S.bag,meal:S.meal});
+   out.push({...r,fl:S.sel[l],name:S.pax[i].name});S.mine.push(r.pnr)}
+  done(out)}catch(e){toast(e.message+(out.length?' (some tickets were already issued: '+out.map(o=>o.pnr)+')':''),false);if(!out.length&&/Seat/.test(e.message)){S.seats=S.seats.map(()=>null);seatStep()}}
+ $('#ov').style.display='none'}
+function bar(p){let h=H(p),x=0,r='';for(let i=0;i<34;i++){h=(h*1103515245+12345)>>>0;const w=1+h%3;r+=`<rect x="${x}" width="${w}" height="40" fill="#fff"/>`;x+=w+1+h%2}return `<svg viewBox="0 0 ${x} 40" width="120" height="40">${r}</svg>`}
+function done(out){stepBar(6);$('#stage').innerHTML=`<div class="card" style="text-align:center;margin-bottom:18px"><div style="font-size:44px">✅</div><h2 style="margin:4px 0">Booking confirmed!</h2><div class="mut">Confirmation sent to ${S.contact.email}. Save your PNR to manage your booking.</div></div>${out.map(passCard).join('')}
+ <div class="noprint" style="text-align:center"><button class="btn" onclick="window.print()">🖨 Print boarding passes</button> <button class="btn sec" onclick="location.reload()">Book another trip</button></div>`}
+function passCard(o){const f=o.fl||o,cls=o.travel_class||S.q?.cls||'ECONOMY';return `<div class="bp"><div class="l"><div style="display:flex;justify-content:space-between"><b>SkyBook Air · ${f.flight_no}</b><span class="mut">${(o.name||o.full_name||'')}</span></div>
+ <div class="big">${f.origin} → ${f.destination}</div><div class="mut">${city(f.origin)} to ${city(f.destination)}</div>
+ <div class="grid"><div>Date<b>${dmy(f.dep_time)}</b></div><div>Departs<b>${hm(f.dep_time)}</b></div><div>Arrives<b>${hm(f.arr_time)}</b></div><div>Seat<b>${o.seat||o.seat_no}</b></div><div>Class<b>${cls[0]+cls.slice(1).toLowerCase()}</b></div><div>Paid<b>${inr(o.fare)}</b></div></div></div>
+ <div class="r"><div style="font-size:11px;opacity:.7">PNR</div><div class="big" style="font-size:24px">${o.pnr}</div><div style="margin-top:10px">${bar(o.pnr)}</div></div></div>`}
+
+/* ===== Manage ===== */
+function mine(){const m=[...new Set(S.mine)];$('#mine').innerHTML=m.length?'<span class="mut">Recent: </span>'+m.map(p=>`<button class="chip" onclick="$('#pnr').value='${p}';lookup()">${p}</button>`).join(' '):''}
+async function lookup(){const p=$('#pnr').value.trim();if(!p)return;
+ try{const b=await API.booking(p),x=b.status==='CANCELLED';
+  $('#ticket').innerHTML=`<div style="margin-top:18px">${passCard({...b,fl:b,pnr:b.pnr,seat:b.seat_no,name:b.full_name})}<div class="card" style="display:flex;justify-content:space-between;align-items:center"><span><span class="status ${x?'x':''}">${b.status}</span> ${x?'Refunded '+inr(b.refund):'Free cancellation refund: 90% (>24h), 50% (2–24h), 0% (<2h)'}</span>${x?'':`<button class="btn red" onclick="cancelT('${b.pnr}')">Cancel ticket</button>`}</div></div>`}
+ catch(e){$('#ticket').innerHTML='';toast(e.message,false)}}
+async function cancelT(p){if(!confirm('Cancel this ticket?'))return;try{const r=await API.cancel(p);toast('Cancelled. Refund '+inr(r.refund));$('#v-trips').style.display==='block'?trips():lookup()}catch(e){toast(e.message,false)}}
+
+/* ===== Admin ===== */
+async function admin(){let r=[];try{r=await API.stats()}catch(e){toast(e.message,false)}
+ const t=r.reduce((s,x)=>s+ +x.tickets_sold,0),rev=r.reduce((s,x)=>s+ +x.revenue,0),mx=Math.max(1,...r.map(x=>+x.revenue));
+ $('#adm').innerHTML=`<h2 style="margin-top:0">Operations dashboard</h2><div class="kpi"><div class="card"><span class="mut">Tickets sold</span><b>${t}</b></div><div class="card"><span class="mut">Revenue</span><b>${inr(rev)}</b></div><div class="card"><span class="mut">Active flights</span><b>${r.length}</b></div><div class="card"><span class="mut">Avg fare</span><b>${t?inr(rev/t):'–'}</b></div></div>
+ <div class="card"><h4 style="margin-top:0">Revenue by flight (v_flight_revenue)</h4>${r.length?r.map(x=>`<div class="hb"><span style="width:150px">${x.flight_no} ${x.origin}→${x.destination}</span><i style="width:${Math.max(3,x.revenue/mx*55)}%"></i><b>${inr(x.revenue)}</b><span class="mut">${x.tickets_sold} tix</span></div>`).join(''):'<div class="empty">No bookings yet. Book a flight to see analytics.</div>'}</div>`}
+
+/* ===== Authentication ===== */
+const ls=(k,v)=>{try{if(v===undefined)return localStorage.getItem(k);v===null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}};
+Object.assign(S,{user:null,token:null,after:null,cur:'book'});
+let authUp=false;
+const USERS=JSON.parse(ls('sb_users')||'null')||{'admin@skybook.com':{name:'Administrator',pw:H('Admin@123admin@skybook.com'),role:'ADMIN'}};
+const post=(u,b)=>jf(u,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});
+API.register=async(name,email,pw)=>{if(live)return post('/api/register',{name,email,password:pw});email=email.toLowerCase();
+ if(USERS[email])throw Error('An account with this e-mail already exists');USERS[email]={name,pw:H(pw+email),role:'USER'};ls('sb_users',JSON.stringify(USERS));return{user:{name,email,role:'USER'},token:'demo'}};
+API.login=async(email,pw)=>{if(live)return post('/api/login',{email,password:pw});email=email.toLowerCase();const u=USERS[email];
+ if(!u||u.pw!==H(pw+email))throw Error('Invalid email or password');return{user:{name:u.name,email,role:u.role},token:'demo'}};
+API.mytrips=async()=>live?jf('/api/my-bookings'):Object.values(DB).filter(b=>b.owner===S.user.email).reverse();
+function setSession(u,t){S.user=u;S.token=t;ls('sb_session',JSON.stringify({user:u,token:t}));renderNav()}
+function logout(silent){S.user=null;S.token=null;ls('sb_session',null);renderNav();if(!silent){toast('Signed out');view('book')}}
+function gate(fn){if(S.user)return fn();S.after=fn;authMode('in');view('auth')}
+function authMode(m){authUp=m==='up';$('#a-in').classList.toggle('on',!authUp);$('#a-up').classList.toggle('on',authUp);
+ $('#a-name-w').style.display=$('#a-conf-w').style.display=$('#a-meter').style.display=authUp?'block':'none';
+ $('#a-go').textContent=authUp?'Create account':'Sign in';$('#a-pass').autocomplete=authUp?'new-password':'current-password';$('#a-err').textContent='';
+ $('#a-hint').innerHTML=live?'':'Demo mode: try <b>admin@skybook.com</b> / <b>Admin@123</b> for the admin dashboard, or create an account.'}
+function meter(){const p=$('#a-pass').value;let s=0;if(p.length>=8)s++;if(/\d/.test(p)&&/[A-Za-z]/.test(p))s++;if(/[A-Z]/.test(p)&&/[a-z]/.test(p))s++;if(/[^A-Za-z0-9]/.test(p)||p.length>=12)s++;
+ const m=$('#a-meter i');m.style.width=s*25+'%';m.style.background=s<2?'#dc2f2f':s<3?'#ff8a1f':'#0e9f6e'}
+async function authSubmit(){
+ const email=$('#a-email').value.trim(),pw=$('#a-pass').value,name=$('#a-name').value.trim(),err=$('#a-err');err.textContent='';
+ if(!/^\S+@\S+\.\S+$/.test(email))return err.textContent='Enter a valid e-mail address';
+ if(authUp){if(name.length<2)return err.textContent='Enter your full name';
+  if(pw.length<8||!/\d/.test(pw)||!/[A-Za-z]/.test(pw))return err.textContent='Password needs 8+ characters with letters and numbers';
+  if(pw!==$('#a-conf').value)return err.textContent='Passwords do not match'}
+ else if(!pw)return err.textContent='Enter your password';
+ $('#a-go').disabled=true;
+ try{const r=authUp?await API.register(name,email,pw):await API.login(email,pw);setSession(r.user,r.token);
+  toast('Welcome, '+r.user.name.split(' ')[0]+'!');$('#a-pass').value=$('#a-conf').value='';const f=S.after;S.after=null;view('book');if(f)f()}
+ catch(e){err.textContent=e.message}
+ $('#a-go').disabled=false}
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&$('#v-auth').style.display==='block')authSubmit()});
+function renderNav(){const u=S.user,on=x=>S.cur===x?'on':'';
+ $('#navr').innerHTML=`<a class="${on('book')}" onclick="view('book')">Book</a><a class="${on('manage')}" onclick="view('manage')">Manage booking</a>${u?`<a class="${on('trips')}" onclick="view('trips')">My trips</a>`:''}${u&&u.role==='ADMIN'?`<a class="${on('admin')}" onclick="view('admin')">Admin</a>`:''}
+ ${u?`<span class="usr"><span class="av">${u.name[0].toUpperCase()}</span>${u.name.split(' ')[0]}<a onclick="logout()" style="margin-left:8px">Logout</a></span>`:`<button class="btn" style="padding:7px 18px;margin-left:20px" onclick="authMode('in');view('auth')">Sign in</button>`}<span class="mode ${live?'live':''}">${live?'● Oracle live':'Demo mode'}</span>`}
+function view(v){
+ if(v==='admin'&&!(S.user&&S.user.role==='ADMIN'))return toast('Admin access only',false);
+ if(v==='trips'&&!S.user)return gate(()=>view('trips'));
+ S.cur=v;['book','manage','trips','admin','auth'].forEach(x=>$('#v-'+x).style.display=x===v?'block':'none');renderNav();
+ if(v==='admin')admin();if(v==='manage')mine();if(v==='trips')trips();window.scrollTo(0,0)}
+async function trips(){const el=$('#trips');el.innerHTML='<div class="empty">Loading…</div>';
+ try{const r=await API.mytrips();el.innerHTML='<h2 style="margin-top:0">My trips</h2>'+(r.length?r.map(b=>{const x=b.status==='CANCELLED';
+  return passCard({...b,fl:b,seat:b.seat_no,name:b.full_name})+`<div class="card" style="margin:-6px 0 18px;display:flex;justify-content:space-between;align-items:center"><span class="status ${x?'x':''}">${b.status}${x?' · refunded '+inr(b.refund):''}</span>${x?'':`<button class="btn red" onclick="cancelT('${b.pnr}')">Cancel ticket</button>`}</div>`}).join(''):'<div class="card empty">No trips yet. <a onclick="view(\'book\')" style="color:var(--pri);cursor:pointer;font-weight:700">Book your first flight</a></div>')}
+ catch(e){el.innerHTML='';toast(e.message,false)}}
+
+/* ===== Init ===== */
+(async function(){
+ fillAp();$('#date').value=$('#date').min=ymd(new Date());$('#ret').min=ymd(new Date());
+ try{const a=await jf('/api/airports');if(Array.isArray(a)&&a.length){APS=a;live=true;fillAp()}}catch(e){}
+ try{const ss=JSON.parse(ls('sb_session')||'null');if(ss){if(live&&ss.token!=='demo'){S.token=ss.token;try{S.user=await jf('/api/me')}catch(e){S.token=null}}else if(!live&&ss.token==='demo'){S.user=ss.user;S.token='demo'}}}catch(e){}
+ renderNav();
+ if(!live)toast('Running in demo mode – start the Node server to use the Oracle database',true)})();
+</script></body></html>
